@@ -55,4 +55,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     if Vagrant.has_plugin?('vagrant-notify-forwarder')
         config.notify_forwarder.enable = true
     end
+
+    # A private dhcp network is required for NFS to work (on Windows hosts, at least)
+    config.vm.network "private_network", type: "dhcp"
+    
+    # enable symlinks for windows hosts
+    config.vm.provider "virtualbox" do |v|
+        v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+    end
 end
